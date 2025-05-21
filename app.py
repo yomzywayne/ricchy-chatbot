@@ -1,4 +1,5 @@
 import os
+import json
 import streamlit as st
 import google.generativeai as genai
 import firebase_admin
@@ -12,8 +13,10 @@ if "GEMINI_API_KEY" not in os.environ:
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
 # Initialize Firebase Admin SDK
-if "FIREBASE_CREDENTIALS" not in os.environ:
-    os.environ["FIREBASE_CREDENTIALS"] = r"C:\\Users\\richa\\OneDrive - Queen Mary, University of London\\Cloud Computing\\ricchy-clothing-chatbot-firebase-adminsdk-fbsvc-1e184dd39f.json"
+if not firebase_admin._apps:
+    cred_dict = json.loads(st.secrets["FIREBASE_CREDENTIALS"])
+    cred = credentials.Certificate(cred_dict)
+    firebase_admin.initialize_app(cred)
 
 if not firebase_admin._apps:
     cred = credentials.Certificate(os.environ["FIREBASE_CREDENTIALS"])
